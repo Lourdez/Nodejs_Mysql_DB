@@ -11,11 +11,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  host: "database-1.cuohe0bgnbcx.us-west-2.rds.amazonaws.com",
+  port: "3306",
+  user: "admin",
+  password: "admin123",
+  database: "db",
   multipleStatements: true
 });
 connection.connect();
