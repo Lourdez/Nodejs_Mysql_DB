@@ -15,10 +15,73 @@ provider "aws" {
 resource "aws_instance" "DB" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
+  vpc_security_group_ids      = [aws_security_group.allow_all.id]
 
   tags = {
     Name = "example-instance"
   }
+}
+
+resource "aws_security_group" "DSG" {
+  name        = "deployment-instance"
+  description = "security group for AWS EC2 instances"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8080
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+ 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "deployment-instance"
+  }
+}
+
+#6.Creating mysql database:
+resource "aws_db_instance" "mysqlDB" {
+  identifier             = "nodejs-db"
+  allocated_storage      = 20
+  storage_type           = "gp2"
+  db_name                = "mysqldb"
+  engine                 = "mysql"
+  engine_version         = "5.7"
+  instance_class         = "db.t2.micro"
+  username               = "admin"
+  password               = "mysql123"
+  parameter_group_name   = "default.mysql5.7"
+  availability_zone      = "us-east-2c"
+  skip_final_snapshot    = true
+  vpc_security_group_ids      = [aws_security_group.allow_all.id]
+  tags = {
+    Name = "nodejs-db"
+  }
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.mydb.endpoint
 }
 
 # S3 bucket
@@ -66,7 +129,6 @@ resource "aws_iam_role" "codepipeline" {
   })
 }
 
-#IAM 
 resource "aws_iam_role" "ec2_role" {
   name = "ec2"
 
@@ -164,3 +226,5 @@ resource "aws_codepipeline" "example_pipeline" {
     }
   }
 }
+
+v
