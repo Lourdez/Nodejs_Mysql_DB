@@ -1,5 +1,15 @@
-version: 0.0
-os: linux
-files:
- - source: /index.html
-   destination: /var/www/html/
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+  pre_build:
+    commands:
+      - npm install
+  build:
+    commands:
+      - npm run build # Replace with your build command
+artifacts:
+  files: '**/*'
+  discard-paths: yes
