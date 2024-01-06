@@ -12,6 +12,3 @@ The project entails the containerization of a Node.js application using Docker, 
 + create a Code Deploy and deployment group which will connect deployment ec2 machine
 + create the pipeline 
 + create cloud watch alarm
-
-# challenges faced
-There are some personal reasons where i stressed myslef to complete this project , i have implemented a basic and simple program , eventually most of the things done manualy to get the desired output in given time.
